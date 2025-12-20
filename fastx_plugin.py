@@ -38,7 +38,7 @@ class ExamplePlugin(Plugin):
         """
         return PluginInfo(
             name="示例插件",
-            version="1.0.0",
+            version="1.0.1",
             author="FastX Team",
             description="这是一个FastX-Tui插件系统的示例插件，展示了插件的基本功能和最佳实践。",
             category="开发",  # 插件分类

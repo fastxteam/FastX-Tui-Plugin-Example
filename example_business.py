@@ -35,16 +35,40 @@ class ExampleBusiness:
         self.add_to_existing_submenu(menu_system)
     
     def create_plugin_submenu(self, menu_system: MenuSystem):
-        """创建插件自己的子菜单"""
-        # 创建子菜单
-        plugin_submenu = menu_system.create_submenu(
+        """创建插件自己的多级菜单"""
+        # 创建一级菜单
+        plugin_main_menu = menu_system.create_submenu(
             menu_id="example_plugin_submenu",
             name="示例插件菜单",
             description="示例插件的专属菜单",
             icon="🔌"
         )
         
-        # 注册命令
+        # 创建二级菜单 - 基础功能
+        basic_menu = menu_system.create_submenu(
+            menu_id="example_basic_menu",
+            name="基础功能",
+            description="示例插件的基础功能",
+            icon="📋"
+        )
+        
+        # 创建三级菜单 - 子菜单嵌套示例
+        nested_menu = menu_system.create_submenu(
+            menu_id="example_nested_menu",
+            name="嵌套菜单示例",
+            description="演示多级菜单嵌套",
+            icon="📦"
+        )
+        
+        # 创建四级菜单 - 深度嵌套示例
+        deep_nested_menu = menu_system.create_submenu(
+            menu_id="example_deep_nested_menu",
+            name="深度嵌套示例",
+            description="演示更深层次的菜单嵌套",
+            icon="🔍"
+        )
+        
+        # 注册基础命令
         menu_system.register_item(ActionItem(
             id="example_hello",
             name="插件问候",
@@ -61,6 +85,7 @@ class ExampleBusiness:
             python_func=self.show_plugin_info
         ))
         
+        # 注册二级菜单命令
         menu_system.register_item(ActionItem(
             id="example_resource",
             name="资源示例",
@@ -69,12 +94,51 @@ class ExampleBusiness:
             python_func=self.show_resource_example
         ))
         
-        # 将命令添加到子菜单
-        plugin_submenu.add_item("example_hello")
-        plugin_submenu.add_item("example_info")
-        plugin_submenu.add_item("example_resource")
+        # 注册三级菜单命令
+        menu_system.register_item(ActionItem(
+            id="example_nested_command1",
+            name="嵌套命令1",
+            description="这是嵌套在三级菜单中的命令",
+            command_type=CommandType.PYTHON,
+            python_func=lambda: "这是嵌套在三级菜单中的命令1！"
+        ))
         
-        # 将子菜单添加到主菜单
+        menu_system.register_item(ActionItem(
+            id="example_nested_command2",
+            name="嵌套命令2",
+            description="这是嵌套在三级菜单中的命令",
+            command_type=CommandType.PYTHON,
+            python_func=lambda: "这是嵌套在三级菜单中的命令2！"
+        ))
+        
+        # 注册四级菜单命令
+        menu_system.register_item(ActionItem(
+            id="example_deep_command",
+            name="深度命令",
+            description="这是嵌套在四级菜单中的命令",
+            command_type=CommandType.PYTHON,
+            python_func=lambda: "这是嵌套在四级菜单中的命令！"
+        ))
+        
+        # 构建多级菜单结构
+        # 一级菜单添加二级菜单和基础命令
+        plugin_main_menu.add_item("example_hello")
+        plugin_main_menu.add_item("example_info")
+        plugin_main_menu.add_item("example_basic_menu")
+        
+        # 二级菜单添加三级菜单和相关命令
+        basic_menu.add_item("example_resource")
+        basic_menu.add_item("example_nested_menu")
+        
+        # 三级菜单添加四级菜单和相关命令
+        nested_menu.add_item("example_nested_command1")
+        nested_menu.add_item("example_nested_command2")
+        nested_menu.add_item("example_deep_nested_menu")
+        
+        # 四级菜单添加命令
+        deep_nested_menu.add_item("example_deep_command")
+        
+        # 将一级菜单添加到主菜单
         menu_system.add_item_to_main_menu("example_plugin_submenu")
     
     def add_to_main_menu(self, menu_system: MenuSystem):
