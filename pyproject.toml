@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0.0", "wheel>=0.37.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,29 +9,23 @@ description = "FastX-Tui插件示例，展示插件系统的基本功能和最�
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
-    { name = "FastX Team", email = "team@fastx-tui.com" },
+    { name = "FastX Team" },
 ]
-license = { file = "LICENSE" }
+license = "MIT"
 dependencies = [
+    "build>=1.3.0",
     "requests>=2.31.0",
-    "build>=1.2.2.post1",
-    "rich>=13.0.0"
+    "rich>=13.0.0",
 ]
-
-[build-system]
-requires = [ "setuptools>=61.0.0", "wheel>=0.37.0",]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-py-modules = [ "example_business", "fastx_plugin",]
-
 keywords = ["fastx-tui", "plugin", "example"]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+
+[tool.setuptools]
+py-modules = ["example_business", "fastx_plugin"]
 
 [project.urls]
 Homepage = "https://github.com/fastxteam/FastX-Tui-Plugin-Example"
