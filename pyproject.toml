@@ -21,4 +21,4 @@ Repository = "https://github.com/fastxteam/FastX-Tui-Plugin-Example.git"
 Issues = "https://github.com/fastxteam/FastX-Tui-Plugin-Example/issues"
 
 [tool.setuptools]
-py-modules = [ "example_business", "fastx_plugin",]
+py-modules = [ "example_business", "fastx_tui_plugin",]
