@@ -5,6 +5,8 @@ FastX-Tui Example Plugin - 入口文件
 业务逻辑请参考 example_business.py
 """
 
+import os
+import toml
 from typing import List, Dict
 from core.plugin_manager import Plugin, PluginInfo
 from core.menu_system import MenuSystem
@@ -31,6 +33,23 @@ class ExamplePlugin(Plugin):
         """初始化插件"""
         super().__init__()
         self.business = None
+    
+    @classmethod
+    def get_version(cls) -> str:
+        """从pyproject.toml获取当前版本号"""
+        try:
+            # 获取当前文件所在目录
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            # 构建pyproject.toml的路径
+            pyproject_path = os.path.join(current_dir, "pyproject.toml")
+            # 读取文件
+            with open(pyproject_path, "r", encoding="utf-8") as f:
+                data = toml.load(f)
+            # 返回版本号
+            return data["project"]["version"]
+        except Exception as e:
+            # 如果读取失败，返回默认版本
+            return "1.0.0"
 
     def get_info(self) -> PluginInfo:
         """获取插件信息
@@ -39,7 +58,7 @@ class ExamplePlugin(Plugin):
         """
         return PluginInfo(
             name="示例插件",
-            version="1.0.1",
+            version=self.get_version(),
             author="FastX Team",
             description="这是一个FastX-Tui插件系统的示例插件，展示了插件的基本功能和最佳实践。",
             category="开发",  # 插件分类
