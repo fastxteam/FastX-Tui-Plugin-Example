@@ -49,7 +49,7 @@ class ExamplePlugin(Plugin):
             repository="https://github.com/fastxteam/FastX-Tui-Plugin-Example",  # 插件仓库
             homepage="https://github.com/fastxteam/FastX-Tui-Plugin-Example",  # 插件主页
             license="MIT",  # 许可证
-            last_updated="2025-12-21",  # 最后更新时间
+            last_updated="2025-12-23",  # 最后更新时间
             rating=4.8,  # 评分
             downloads=1000  # 下载次数
         )
