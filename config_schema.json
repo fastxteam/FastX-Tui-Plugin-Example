@@ -1,0 +1,27 @@
+{
+  "enabled": {
+    "type": "boolean",
+    "default": true,
+    "description": "是否启用该插件",
+    "required": true
+  },
+  "greeting_message": {
+    "type": "string",
+    "default": "Hello from Example Plugin!",
+    "description": "用于Hello World命令的问候信息",
+    "required": false
+  },
+  "show_timestamp": {
+    "type": "boolean",
+    "default": true,
+    "description": "是否在输出中显示时间戳",
+    "required": false
+  },
+  "log_level": {
+    "type": "string",
+    "default": "INFO",
+    "description": "插件的日志级别",
+    "choices": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+    "required": false
+  }
+}

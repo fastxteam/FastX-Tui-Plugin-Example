@@ -1,206 +1,146 @@
 #!/usr/bin/env python3
 """
-FastX-Tui Example Plugin - 业务逻辑模块
-这个模块包含了插件的核心业务逻辑
-"""
+示例插件业务逻辑
 
-from typing import List, Dict
+该文件包含示例插件的业务逻辑，演示了如何使用FastX-Tui插件接口实现业务功能。
+"""
+import time
+from typing import Any
 from core.menu_system import MenuSystem, ActionItem, CommandType
 
 class ExampleBusiness:
-    """示例插件业务逻辑类"""
+    """示例插件业务逻辑类
     
-    def __init__(self, plugin_instance):
-        """初始化业务逻辑"""
-        self.plugin = plugin_instance
-        self.log_info("示例插件业务逻辑初始化完成")
+    该类包含示例插件的业务逻辑，包括：
+    - 初始化业务逻辑
+    - 注册插件命令到菜单系统
+    - 实现Hello World命令
+    - 实现配置演示命令
+    - 清理业务逻辑资源
+    """
     
-    def log_info(self, msg: str, *args, **kwargs):
-        """记录信息日志"""
-        self.plugin.log_info(msg, *args, **kwargs)
+    def __init__(self, plugin):
+        """初始化业务逻辑
+        
+        Args:
+            plugin: 插件实例，用于访问插件的配置、日志等功能
+        """
+        self.plugin = plugin
+        self.logger = plugin.logger
+        
+        # 初始化配置
+        self.greeting_message = "Hello from Example Plugin!"
+        self.show_timestamp = True
+        self.log_level = "INFO"
     
-    def log_warning(self, msg: str, *args, **kwargs):
-        """记录警告日志"""
-        self.plugin.log_warning(msg, *args, **kwargs)
+    def initialize(self):
+        """初始化业务逻辑
+        
+        从配置中获取初始化参数，并记录初始化日志。
+        """
+        # 从配置中获取初始化参数
+        self.greeting_message = self.plugin.get_config("greeting_message", "Hello from Example Plugin!")
+        self.show_timestamp = self.plugin.get_config("show_timestamp", True)
+        self.log_level = self.plugin.get_config("log_level", "INFO")
+        
+        self.plugin.log_info(f"示例插件初始化完成，问候语: {self.greeting_message}")
+        self.plugin.log_info(f"显示时间戳: {self.show_timestamp}")
+        self.plugin.log_info(f"日志级别: {self.log_level}")
     
     def register_commands(self, menu_system: MenuSystem):
-        """注册插件命令到菜单系统"""
-        # 创建插件的子菜单
-        self.create_plugin_submenu(menu_system)
+        """注册插件命令到菜单系统
         
-        # 向主菜单添加命令
-        self.add_to_main_menu(menu_system)
+        将插件的命令和菜单注册到菜单系统中。
         
-        # 向现有子菜单添加命令
-        self.add_to_existing_submenu(menu_system)
-    
-    def create_plugin_submenu(self, menu_system: MenuSystem):
-        """创建插件自己的多级菜单"""
-        # 创建一级菜单
-        plugin_main_menu = menu_system.create_submenu(
-            menu_id="example_plugin_submenu",
-            name="示例插件菜单",
-            description="示例插件的专属菜单",
-            icon="🔌"
+        Args:
+            menu_system: 菜单系统实例，用于注册插件的命令和菜单
+        """
+        # 创建主菜单
+        main_menu = menu_system.create_submenu(
+            menu_id="example_plugin_menu",
+            name="示例插件",
+            description="演示插件的功能"
         )
         
-        # 创建二级菜单 - 基础功能
-        basic_menu = menu_system.create_submenu(
-            menu_id="example_basic_menu",
-            name="基础功能",
-            description="示例插件的基础功能",
-            icon="📋"
-        )
-        
-        # 创建三级菜单 - 子菜单嵌套示例
-        nested_menu = menu_system.create_submenu(
-            menu_id="example_nested_menu",
-            name="嵌套菜单示例",
-            description="演示多级菜单嵌套",
-            icon="📦"
-        )
-        
-        # 创建四级菜单 - 深度嵌套示例
-        deep_nested_menu = menu_system.create_submenu(
-            menu_id="example_deep_nested_menu",
-            name="深度嵌套示例",
-            description="演示更深层次的菜单嵌套",
-            icon="🔍"
-        )
-        
-        # 注册基础命令
+        # 注册Hello World命令
         menu_system.register_item(ActionItem(
             id="example_hello",
-            name="插件问候",
-            description="这是一个插件命令示例，展示了如何创建插件命令",
+            name="Hello World",
+            description="演示基本命令执行",
             command_type=CommandType.PYTHON,
-            python_func=lambda: "Hello from FastX-Tui Example Plugin!"
+            python_func=self.hello_world,
+            category="示例"
         ))
         
+        # 注册配置演示命令
         menu_system.register_item(ActionItem(
-            id="example_info",
-            name="插件信息",
-            description="显示插件的详细信息",
+            id="example_config",
+            name="配置演示",
+            description="演示如何使用插件配置",
             command_type=CommandType.PYTHON,
-            python_func=self.show_plugin_info
+            python_func=self.config_demo,
+            category="示例"
         ))
         
-        # 注册二级菜单命令
-        menu_system.register_item(ActionItem(
-            id="example_resource",
-            name="资源示例",
-            description="展示如何访问插件资源文件",
-            command_type=CommandType.PYTHON,
-            python_func=self.show_resource_example
-        ))
+        # 将命令添加到菜单
+        main_menu.add_item("example_hello")
+        main_menu.add_item("example_config")
         
-        # 注册三级菜单命令
-        menu_system.register_item(ActionItem(
-            id="example_nested_command1",
-            name="嵌套命令1",
-            description="这是嵌套在三级菜单中的命令",
-            command_type=CommandType.PYTHON,
-            python_func=lambda: "这是嵌套在三级菜单中的命令1！"
-        ))
-        
-        menu_system.register_item(ActionItem(
-            id="example_nested_command2",
-            name="嵌套命令2",
-            description="这是嵌套在三级菜单中的命令",
-            command_type=CommandType.PYTHON,
-            python_func=lambda: "这是嵌套在三级菜单中的命令2！"
-        ))
-        
-        # 注册四级菜单命令
-        menu_system.register_item(ActionItem(
-            id="example_deep_command",
-            name="深度命令",
-            description="这是嵌套在四级菜单中的命令",
-            command_type=CommandType.PYTHON,
-            python_func=lambda: "这是嵌套在四级菜单中的命令！"
-        ))
-        
-        # 构建多级菜单结构
-        # 一级菜单添加二级菜单和基础命令
-        plugin_main_menu.add_item("example_hello")
-        plugin_main_menu.add_item("example_info")
-        plugin_main_menu.add_item("example_basic_menu")
-        
-        # 二级菜单添加三级菜单和相关命令
-        basic_menu.add_item("example_resource")
-        basic_menu.add_item("example_nested_menu")
-        
-        # 三级菜单添加四级菜单和相关命令
-        nested_menu.add_item("example_nested_command1")
-        nested_menu.add_item("example_nested_command2")
-        nested_menu.add_item("example_deep_nested_menu")
-        
-        # 四级菜单添加命令
-        deep_nested_menu.add_item("example_deep_command")
-        
-        # 将一级菜单添加到主菜单
-        menu_system.add_item_to_main_menu("example_plugin_submenu")
+        # 将菜单添加到主菜单
+        main_menu_id = "main_menu"
+        main_menu_item = menu_system.get_item_by_id(main_menu_id)
+        if main_menu_item and hasattr(main_menu_item, "add_item"):
+            main_menu_item.add_item("example_plugin_menu")
     
-    def add_to_main_menu(self, menu_system: MenuSystem):
-        """向主菜单添加命令"""
-        menu_system.register_item(ActionItem(
-            id="main_example_command",
-            name="主菜单示例命令",
-            description="这是直接添加到主菜单的插件命令",
-            icon="⭐",
-            command_type=CommandType.PYTHON,
-            python_func=lambda: "这是一个直接添加到主菜单的命令！"
-        ))
+    def hello_world(self) -> str:
+        """演示基本命令执行
         
-        # 将命令添加到主菜单
-        menu_system.add_item_to_main_menu("main_example_command")
-    
-    def add_to_existing_submenu(self, menu_system: MenuSystem):
-        """向现有子菜单添加命令"""
-        # 注册命令
-        menu_system.register_item(ActionItem(
-            id="system_example_command",
-            name="系统工具示例命令",
-            description="这是添加到系统工具菜单的插件命令",
-            icon="🔧",
-            command_type=CommandType.PYTHON,
-            python_func=lambda: "这是一个添加到系统工具菜单的命令！"
-        ))
+        返回一个包含问候信息、时间戳和插件版本的字符串。
         
-        # 将命令添加到系统工具菜单（如果存在）
-        if not menu_system.add_item_to_menu("system_tools_menu", "system_example_command"):
-            self.log_warning("无法将命令添加到系统工具菜单，该菜单可能不存在")
-    
-    def show_plugin_info(self) -> str:
-        """显示插件信息"""
-        info = self.plugin.get_info()
-        return f"""
-📦 插件信息
-===========
-名称：{info.name}
-版本：v{info.version}
-作者：{info.author}
-分类：{info.category}
-标签：{', '.join(info.tags)}
-描述：{info.description}
-许可证：{info.license}
-兼容性：{', '.join([f"{k}: {v}" for k, v in info.compatibility.items()])}
-依赖：{', '.join(info.dependencies)}
-仓库：{info.repository}
-主页：{info.homepage}
-最后更新：{info.last_updated}
-评分：{info.rating}
-下载次数：{info.downloads}
+        Returns:
+            str: 包含问候信息、时间戳和插件版本的字符串
         """
-    
-    def show_resource_example(self) -> str:
-        """展示资源文件访问"""
-        # 尝试获取资源文件路径
-        resource_path = self.plugin.get_resource_path("example.txt")
+        # 获取配置
+        greeting = self.plugin.get_config("greeting_message", "Hello World!")
+        show_timestamp = self.plugin.get_config("show_timestamp", True)
         
-        try:
-            with open(resource_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            return f"📄 资源文件内容：\n{content}"
-        except FileNotFoundError:
-            return f"⚠️  资源文件不存在：{resource_path}\n请在插件目录的resources文件夹中创建example.txt文件"
+        # 构建响应
+        result = f"{greeting}\n"
+        if show_timestamp:
+            result += f"当前时间: {time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        result += f"插件版本: {self.plugin.get_info().version}\n"
+        result += "命令执行成功!"
+        
+        return result
+    
+    def config_demo(self) -> str:
+        """演示如何使用插件配置
+        
+        返回一个包含当前配置信息的字符串。
+        
+        Returns:
+            str: 包含当前配置信息的字符串
+        """
+        # 获取所有配置
+        greeting = self.plugin.get_config("greeting_message", "Default Greeting")
+        show_timestamp = self.plugin.get_config("show_timestamp", True)
+        log_level = self.plugin.get_config("log_level", "INFO")
+        enabled = self.plugin.get_config("enabled", True)
+        
+        # 构建响应
+        result = "配置演示\n\n"
+        result += "当前配置:\n"
+        result += f"- 问候信息: {greeting}\n"
+        result += f"- 显示时间戳: {'是' if show_timestamp else '否'}\n"
+        result += f"- 日志级别: {log_level}\n"
+        result += f"- 插件启用: {'是' if enabled else '否'}\n"
+        result += "\n配置读取成功!"
+        
+        return result
+    
+    def cleanup(self):
+        """清理业务逻辑资源
+        
+        清理业务逻辑使用的资源，并记录清理日志。
+        """
+        self.plugin.log_info("示例插件业务逻辑清理完成")
