@@ -4,22 +4,21 @@ Rich组件演示器 - 菜单驱动版
 用户可以选择要查看的组件
 """
 
+import os
 import sys
 import time
-import os
-from typing import Dict, List, Callable
-from rich.console import Console
-from rich.panel import Panel
-from rich.table import Table
-from rich.tree import Tree
-from rich.layout import Layout
-from rich.text import Text
-from rich.syntax import Syntax
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
-from rich.columns import Columns
-from rich.prompt import Prompt
+
 from rich import box
+from rich.columns import Columns
+from rich.console import Console
+from rich.layout import Layout
+from rich.panel import Panel
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 from rich.style import Style
+from rich.syntax import Syntax
+from rich.table import Table
+from rich.text import Text
+from rich.tree import Tree
 
 
 class RichDemoMenu:
@@ -29,7 +28,7 @@ class RichDemoMenu:
         self.current_page = 0
         self.items_per_page = 8
 
-    def _setup_components(self) -> Dict[str, Dict]:
+    def _setup_components(self) -> dict[str, dict]:
         """设置可演示的组件"""
         return {
             "console": {
@@ -132,7 +131,7 @@ class RichDemoMenu:
         """
         self.console.print(title, style="bold cyan")
 
-    def show_menu(self, page: int = 0) -> List[str]:
+    def show_menu(self, page: int = 0) -> list[str]:
         """显示菜单页面"""
         self.clear_screen()
         self.show_header()
@@ -181,7 +180,7 @@ class RichDemoMenu:
 
         return page_keys
 
-    def get_user_choice(self, page_keys: List[str]) -> str:
+    def get_user_choice(self, page_keys: list[str]) -> str:
         """获取用户选择 - 修复选择限制问题"""
         while True:
             try:

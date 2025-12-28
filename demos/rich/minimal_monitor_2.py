@@ -1,8 +1,9 @@
+import time
+from datetime import datetime
+
 from rich.console import Console
 from rich.live import Live
 from rich.text import Text
-import time
-from datetime import datetime
 
 
 def create_simple_status(message="", progress=0):
@@ -29,7 +30,7 @@ def create_simple_status(message="", progress=0):
 def main():
     """主函数入口"""
     console = Console()
-    
+
     # 实时更新状态
     with Live(create_simple_status(), refresh_per_second=4) as live:
         for i in range(101):

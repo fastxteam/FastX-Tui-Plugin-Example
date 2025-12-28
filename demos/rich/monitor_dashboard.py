@@ -1,9 +1,10 @@
+import random
+import time
+
+from rich.columns import Columns
 from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
-from rich.columns import Columns
-import time
-import random
 
 
 def generate_dynamic_status(counter):
@@ -95,11 +96,11 @@ def generate_dynamic_status(counter):
 def main():
     """主函数入口"""
     console = Console()
-    
+
     # 使用 Live 实时更新
     console.print("[bold]开始实时监控系统状态...[/bold]\n")
     console.print("按 Ctrl+C 停止监控\n")
-    
+
     try:
         with Live(generate_dynamic_status(0), refresh_per_second=4, screen=True) as live:
             for i in range(1, 21):  # 运行20次迭代

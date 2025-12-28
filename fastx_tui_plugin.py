@@ -4,13 +4,15 @@ FastX-Tui Example Plugin - 入口文件
 这个文件是插件的入口，包含插件的配置信息和基本结构
 业务逻辑请参考 example_business.py
 """
-import os
 import json
+import os
+from typing import Any
+
 import toml
-from typing import Dict, Any
-from core.plugin_manager import Plugin, PluginInfo
-from core.menu_system import MenuSystem
 from example_business import ExampleBusiness
+
+from core.menu_system import MenuSystem
+from core.plugin_manager import Plugin, PluginInfo
 
 
 class ExamplePlugin(Plugin):
@@ -33,7 +35,7 @@ class ExamplePlugin(Plugin):
         """初始化插件"""
         super().__init__()
         self.business = None
-    
+
     @classmethod
     def get_version(cls) -> str:
         """从pyproject.toml获取当前版本号"""
@@ -43,11 +45,11 @@ class ExamplePlugin(Plugin):
             # 构建pyproject.toml的路径
             pyproject_path = os.path.join(current_dir, "pyproject.toml")
             # 读取文件
-            with open(pyproject_path, "r", encoding="utf-8") as f:
+            with open(pyproject_path, encoding="utf-8") as f:
                 data = toml.load(f)
             # 返回版本号
             return data["project"]["version"]
-        except Exception as e:
+        except Exception:
             # 如果读取失败，返回默认版本
             return "1.0.0"
 
@@ -104,7 +106,7 @@ class ExamplePlugin(Plugin):
         """
         # 调用业务逻辑注册命令
         self.business.register_commands(menu_system)
-        
+
         # 更新主菜单计数
         self.main_menus_registered += 1
         self.main_menu_id = "example_plugin_menu"
@@ -120,7 +122,7 @@ class ExamplePlugin(Plugin):
             if self.plugin_path:
                 manual_path = os.path.join(self.plugin_path, "manual.md")
                 if os.path.exists(manual_path):
-                    with open(manual_path, "r", encoding="utf-8") as f:
+                    with open(manual_path, encoding="utf-8") as f:
                         return f.read()
             # 如果文件不存在或plugin_path未设置，返回默认内容
             return "# 插件手册\n\n该插件未提供帮助文档。"
@@ -128,7 +130,7 @@ class ExamplePlugin(Plugin):
             self.log_error(f"读取插件手册失败: {e}")
             return "# 插件手册\n\n读取帮助文档失败。"
 
-    def get_config_schema(self) -> Dict[str, Any]:
+    def get_config_schema(self) -> dict[str, Any]:
         """获取插件配置模式，从config_schema.json文件中读取
         
         Returns:
@@ -139,7 +141,7 @@ class ExamplePlugin(Plugin):
             if self.plugin_path:
                 config_schema_path = os.path.join(self.plugin_path, "config_schema.json")
                 if os.path.exists(config_schema_path):
-                    with open(config_schema_path, "r", encoding="utf-8") as f:
+                    with open(config_schema_path, encoding="utf-8") as f:
                         return json.load(f)
             # 如果文件不存在或plugin_path未设置，返回默认配置
             return {

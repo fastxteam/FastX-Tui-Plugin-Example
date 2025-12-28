@@ -1,12 +1,13 @@
-from rich.console import Console
-from rich.live import Live
-from rich.layout import Layout
-from rich.panel import Panel
-from rich.text import Text
-from rich.syntax import Syntax
-from datetime import datetime
-import time
 import random
+import time
+from datetime import datetime
+
+from rich.console import Console
+from rich.layout import Layout
+from rich.live import Live
+from rich.panel import Panel
+from rich.syntax import Syntax
+from rich.text import Text
 
 
 class CodeMonitor:

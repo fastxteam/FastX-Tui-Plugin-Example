@@ -5,15 +5,14 @@ Layout路由实现示例
 支持上下键切换章节
 """
 
-from rich.console import Console
-from rich.panel import Panel
-from rich.layout import Layout
-from rich.table import Table
-from rich.tree import Tree
-from rich.text import Text
-from rich import box
-import sys
 import os
+import sys
+
+from rich import box
+from rich.console import Console
+from rich.layout import Layout
+from rich.panel import Panel
+from rich.table import Table
 
 
 class RouterApp:
@@ -141,7 +140,7 @@ class RouterApp:
 
     def update_footer(self):
         """更新底部状态栏"""
-        status = f"使用数字键切换页面 (1-4) | 方向键↑↓切换章节 | Q键退出"
+        status = "使用数字键切换页面 (1-4) | 方向键↑↓切换章节 | Q键退出"
         self.layout["footer"].update(
             Panel(status,
                   style="white on blue")
@@ -473,9 +472,9 @@ A: 1. 检查错误日志文件
     def handle_input(self):
         """处理用户输入"""
         try:
-            import tty
-            import termios
             import select
+            import termios
+            import tty
 
             # 保存原始终端设置
             fd = sys.stdin.fileno()

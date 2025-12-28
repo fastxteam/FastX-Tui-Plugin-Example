@@ -1,12 +1,12 @@
-from rich.console import Console
-from rich.live import Live
-from rich.layout import Layout
-from rich.panel import Panel
-from rich.text import Text
-from rich.syntax import Syntax
+import random
 import time
 from datetime import datetime
-import random
+
+from rich.console import Console
+from rich.layout import Layout
+from rich.live import Live
+from rich.panel import Panel
+from rich.text import Text
 
 
 class StatusBar:
