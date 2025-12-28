@@ -5,8 +5,14 @@
 该文件包含示例插件的业务逻辑，演示了如何使用FastX-Tui插件接口实现业务功能。
 """
 import time
+import sys
+import os
 from typing import Any
 from core.menu_system import MenuSystem, ActionItem, CommandType
+
+# 添加demo目录到路径
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))  # 添加项目根目录到路径
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'FastX-Tui-Plugin-Example'))  # 添加插件目录到路径
 
 class ExampleBusiness:
     """示例插件业务逻辑类
@@ -82,9 +88,41 @@ class ExampleBusiness:
             category="示例"
         ))
         
+        # 创建Rich Demo子菜单
+        rich_demo_menu = menu_system.create_submenu(
+            menu_id="rich_demo_menu",
+            name="Rich演示",
+            description="演示Rich库的各种功能"
+        )
+        
+        # 注册Rich Demo命令
+        rich_demos = [
+            ("rich_code_execution_monitor", "代码执行监控", "演示实时代码执行监控界面", self.rich_code_execution_monitor),
+            ("rich_components_view", "Rich组件演示", "演示Rich库的各种组件", self.rich_components_view),
+            ("rich_layout_nav", "布局导航", "演示带路由功能的布局导航系统", self.rich_layout_nav),
+            ("rich_log_execution_monitor", "日志执行监控", "演示实时日志监控系统", self.rich_log_execution_monitor),
+            ("rich_minimal_monitor_1", "简约监控1", "使用Status组件创建简约任务监控", self.rich_minimal_monitor_1),
+            ("rich_minimal_monitor_2", "简约监控2", "使用Live组件创建实时更新状态栏", self.rich_minimal_monitor_2),
+            ("rich_monitor_dashboard", "监控仪表板", "创建多面板系统监控仪表板", self.rich_monitor_dashboard),
+            ("rich_panel_table", "面板表格", "演示Panel和Table组件创建脚本管理器", self.rich_panel_table),
+            ("rich_parallel_progress", "并行进度条", "创建多任务并行进度条系统", self.rich_parallel_progress)
+        ]
+        
+        for demo_id, demo_name, demo_desc, demo_func in rich_demos:
+            menu_system.register_item(ActionItem(
+                id=demo_id,
+                name=demo_name,
+                description=demo_desc,
+                command_type=CommandType.PYTHON,
+                python_func=demo_func,
+                category="Rich演示"
+            ))
+            rich_demo_menu.add_item(demo_id)
+        
         # 将命令添加到菜单
         main_menu.add_item("example_hello")
         main_menu.add_item("example_config")
+        main_menu.add_item("rich_demo_menu")
         
         # 将菜单添加到主菜单
         main_menu_id = "main_menu"
@@ -137,6 +175,142 @@ class ExampleBusiness:
         result += "\n配置读取成功!"
         
         return result
+    
+    # Rich Demo 函数接口
+    def rich_code_execution_monitor(self) -> str:
+        """代码执行监控演示
+        
+        演示如何使用Rich库创建实时代码执行监控界面，包括代码高亮、日志输出和状态监控。
+        
+        Returns:
+            str: 命令执行结果
+        """
+        try:
+            from demos.rich.code_execution_monitor import main
+            main()
+            return "代码执行监控演示完成"
+        except Exception as e:
+            return f"演示失败: {str(e)}"
+    
+    def rich_components_view(self) -> str:
+        """Rich组件演示
+        
+        演示Rich库的各种组件，包括面板、表格、树状结构、布局管理等。
+        
+        Returns:
+            str: 命令执行结果
+        """
+        try:
+            from demos.rich.components_view import main
+            main()
+            return "Rich组件演示完成"
+        except Exception as e:
+            return f"演示失败: {str(e)}"
+    
+    def rich_layout_nav(self) -> str:
+        """布局导航演示
+        
+        演示如何使用Rich库创建带路由功能的布局导航系统。
+        
+        Returns:
+            str: 命令执行结果
+        """
+        try:
+            from demos.rich.layout_nav import main
+            main()
+            return "布局导航演示完成"
+        except Exception as e:
+            return f"演示失败: {str(e)}"
+    
+    def rich_log_execution_monitor(self) -> str:
+        """日志执行监控
+        
+        演示如何使用Rich库创建实时日志监控系统。
+        
+        Returns:
+            str: 命令执行结果
+        """
+        try:
+            from demos.rich.log_execution_monitor import main
+            main()
+            return "日志执行监控演示完成"
+        except Exception as e:
+            return f"演示失败: {str(e)}"
+    
+    def rich_minimal_monitor_1(self) -> str:
+        """简约监控1
+        
+        演示使用Rich库的Status组件创建简约的任务监控。
+        
+        Returns:
+            str: 命令执行结果
+        """
+        try:
+            from demos.rich.minimal_monitor_1 import main
+            main()
+            return "简约监控1演示完成"
+        except Exception as e:
+            return f"演示失败: {str(e)}"
+    
+    def rich_minimal_monitor_2(self) -> str:
+        """简约监控2
+        
+        演示使用Rich库的Live组件创建实时更新的简约状态栏。
+        
+        Returns:
+            str: 命令执行结果
+        """
+        try:
+            from demos.rich.minimal_monitor_2 import main
+            main()
+            return "简约监控2演示完成"
+        except Exception as e:
+            return f"演示失败: {str(e)}"
+    
+    def rich_monitor_dashboard(self) -> str:
+        """监控仪表板
+        
+        演示使用Rich库创建多面板的系统监控仪表板。
+        
+        Returns:
+            str: 命令执行结果
+        """
+        try:
+            from demos.rich.monitor_dashboard import main
+            main()
+            return "监控仪表板演示完成"
+        except Exception as e:
+            return f"演示失败: {str(e)}"
+    
+    def rich_panel_table(self) -> str:
+        """面板表格示例
+        
+        演示使用Rich库的Panel和Table组件创建脚本管理器界面。
+        
+        Returns:
+            str: 命令执行结果
+        """
+        try:
+            from demos.rich.panel_table import main
+            main()
+            return "面板表格示例演示完成"
+        except Exception as e:
+            return f"演示失败: {str(e)}"
+    
+    def rich_parallel_progress(self) -> str:
+        """并行进度条
+        
+        演示使用Rich库创建多任务并行进度条系统。
+        
+        Returns:
+            str: 命令执行结果
+        """
+        try:
+            from demos.rich.parallel_progress import main
+            main()
+            return "并行进度条演示完成"
+        except Exception as e:
+            return f"演示失败: {str(e)}"
     
     def cleanup(self):
         """清理业务逻辑资源
